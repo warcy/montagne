@@ -1,0 +1,12 @@
+pbr
+
+eventlet
+greenlet
+
+## for OpenStack juno
+python-novaclient==2.20.0
+python-neutronclient==2.3.12
+
+
+## freeze output
+
