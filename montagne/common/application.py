@@ -86,9 +86,8 @@ class MontagneApp(object):
             except:
                 self.LOG.exception(
                     '%s: Exception occurred during handler processing. '
-                    'Backtrace from offending handler '
-                    '[%s] servicing event [%s] follows.',
-                    self.name, None, None)
+                    'handling event [%s] sent from [%s] with handler [%s]',
+                    self.name, ev.__class__.__name__, ev.src, ev_handler)
 
     def _send_event(self, event):
         self._events_sem.acquire()
