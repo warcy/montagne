@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 
 from montagne.common import hub
+hub.patch(thread=False)
+
 from montagne import cfg
 
 import logging
@@ -29,6 +31,7 @@ def main(args=None, prog=None):
              project='montagne', version='montagne-manager %s' % version)
 
     LOG.info('Start Montage')
+    hub.patch(thread=True)
     app_mgr = ApplicationManager()
 
     # applications to run
