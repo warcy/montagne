@@ -13,6 +13,10 @@ def encode(obj, charset='utf-8'):
     return json.dumps(obj).encode(charset)
 
 
+def decode(byte, charset='utf-8'):
+    return json.loads(byte.decode(charset))
+
+
 def get(url, headers=None, decode='utf-8'):
     return _base_method(url, headers=headers, decode=decode)
 
