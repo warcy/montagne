@@ -46,6 +46,7 @@ class NeutronAgents(OpenStackAgents):
         self.alive = kwargs['alive']
         self.id = kwargs['id']
         self.topic = kwargs['topic']
+        self.host = kwargs['host']
         self.agent_type = kwargs['agent_type']
         self.started_at = kwargs['started_at']
         self.created_at = kwargs['created_at']
