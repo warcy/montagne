@@ -1,8 +1,10 @@
 import time
+import json
 from montagne.common import hub
 from montagne.common.application import MontagneApp
 from montagne.listener.event import (TestListenerEvent, TestListenerRequest,
                                      TestListenerReply)
+from montagne.common.wsgi import ControllerBase, route, Response
 
 
 class BaseListener(MontagneApp):
@@ -18,7 +20,8 @@ class OpenRainbowListener(BaseListener):
 
 class TestListener(BaseListener):
     def __init__(self):
-        super().__init__()
+        super(TestListener, self).__init__()
+        self.wsgi_controller = TestListenerController
 
     def serve(self):
         self.thread(self._mock_rcv)
@@ -41,3 +44,15 @@ class TestListener(BaseListener):
 
             hub.sleep(
                 5 - (time.time() - timestamp))
+
+
+class TestListenerController(ControllerBase):
+    def __init__(self, req, link, data, **config):
+        super(TestListenerController, self).__init__(req, link, data, **config)
+        self.inst = data[TestListener.__name__]
+
+    @route('template', '/template_resource', methods=['GET'])
+    def test_handler(self, req, **kwargs):
+        return Response(content_type='application/json', charset='UTF-8',
+                        body=json.dumps({'test msg': 'hello montage.'}),
+                        status=200)

@@ -14,6 +14,7 @@ class MontagneApp(object):
         self.events = hub.Queue(128)
         self._events_sem = hub.BoundedSemaphore(self.events.maxsize)
 
+        self.wsgi_controller = None
         self.thread(self._event_loop)
 
         self.is_active = True
@@ -41,6 +42,7 @@ class MontagneApp(object):
 
     def close(self):
         # TODO:
+        self.is_active = False
         for th in self.threads:
             hub.kill(th)
 
