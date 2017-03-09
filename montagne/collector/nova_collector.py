@@ -62,7 +62,8 @@ class NovaCollector(OpenStackCollector):
                 # function NovaCollector.sync_hypervisors() is called)
                 continue
             for srv in hv[0].servers:
-                hypervisor.servers = NovaHypervisor.Instances(srv)
+                hypervisor.servers.setdefault(
+                    unicode_fmt(srv['uuid']), NovaHypervisor.Instances(srv))
 
     @nova_api_handler
     def _get_hypervisor(self, **kwargs):

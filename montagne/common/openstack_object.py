@@ -111,7 +111,7 @@ class NovaHypervisor(object):
         self.status = unicode_fmt(hv.status)
         self.vcpus = int(hv.vcpus)
         self.vcpus_used = int(hv.vcpus_used)
-        self.servers = None
+        self.servers = {}
 
     class Instances(object):
         def __init__(self, srv):
