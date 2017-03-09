@@ -52,11 +52,11 @@ class MontagneApp(object):
         instance = self.app_mgr.find_app(event.dst)
         if instance is not None:
             self.LOG.debug('EVENT: %s (%s => %s)',
-                           event.src, event.dst, event.__class__.__name__)
+                           event.__class__.__name__, event.src, event.dst)
             instance._send_event(event)
         else:
             self.LOG.error('EVENT LOST: %s (%s => %s)',
-                           event.src, event.dst, event.__class__.__name__)
+                           event.__class__.__name__, event.src, event.dst)
 
     def send_request(self, request):
         assert isinstance(request, BaseRequest)
