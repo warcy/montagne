@@ -9,10 +9,11 @@ import logging
 from montagne import version
 from montagne.common.log import getLogger
 from montagne.common.app_manager import ApplicationManager
-from montagne.collector.collector import NeutronCollector, NovaCollector
+from montagne.collector.neutron_collector import NeutronCollector
+from montagne.collector.nova_collector import NovaCollector
 from montagne.scheduler.scheduler import Scheduler
-from montagne.notifier.notifier import TestNotifier
-from montagne.listener.listener import TestListener
+from montagne.openstack_client.nova_client import NovaClient
+from montagne.openstack_client.neutron_client import NeutronClient
 from montagne.common import wsgi
 
 CONF = cfg.CONF
@@ -36,8 +37,10 @@ def main(args=None, prog=None):
 
     # applications to run
     app_list = [
+        NeutronClient, NovaClient,
         NeutronCollector, NovaCollector,
-        Scheduler, TestListener, TestNotifier
+        Scheduler,
+        # TestListener, TestNotifier
     ]
 
     # initiating application and add to application manager
