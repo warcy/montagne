@@ -117,3 +117,17 @@ class NovaHypervisor(object):
         def __init__(self, srv):
             self.name = unicode_fmt(srv['name'])
             self.uuid = unicode_fmt(srv['uuid'])
+
+
+class LBMember(object):
+    def __init__(self, **kwargs):
+        super(LBMember, self).__init__()
+        self.address = kwargs['address']
+        self.admin_state_up = kwargs['admin_state_up']
+        self.id = kwargs['id']
+        self.pool_id = kwargs['pool_id']
+        self.protocol_port = kwargs['protocol_port']
+        self.status = kwargs['status']
+        self.status_description = kwargs['status_description']
+        self.tenant_id = kwargs['tenant_id']
+        self.weight = kwargs['weight']

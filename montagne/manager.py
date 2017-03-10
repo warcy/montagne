@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 from montagne.common import hub
+
 hub.patch(thread=False)
 
 from montagne import cfg
@@ -9,17 +10,19 @@ import logging
 from montagne import version
 from montagne.common.log import getLogger
 from montagne.common.app_manager import ApplicationManager
+from montagne.openstack_client.nova_client import NovaClient
+from montagne.openstack_client.neutron_client import NeutronClient
 from montagne.collector.neutron_collector import NeutronCollector
 from montagne.collector.nova_collector import NovaCollector
 from montagne.scheduler.scheduler import Scheduler
-from montagne.openstack_client.nova_client import NovaClient
-from montagne.openstack_client.neutron_client import NeutronClient
-from montagne.common import wsgi
+from montagne.notifier.neutron_notifier import NeutronNotifier
+from montagne.listener.openrainbow_listener import OpenRainbowListener
+from montagne.common import wsgi  # register CONF cli
 
 CONF = cfg.CONF
 
 LOG = getLogger()
-LOG.setLevel(logging.DEBUG)
+LOG.setLevel(logging.INFO)
 
 
 def main(args=None, prog=None):
@@ -40,7 +43,8 @@ def main(args=None, prog=None):
         NeutronClient, NovaClient,
         NeutronCollector, NovaCollector,
         Scheduler,
-        # TestListener, TestNotifier
+        NeutronNotifier,
+        OpenRainbowListener
     ]
 
     # initiating application and add to application manager
