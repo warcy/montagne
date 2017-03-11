@@ -5,7 +5,7 @@ from montagne.common import hub
 hub.patch(thread=False)
 
 from montagne import cfg
-
+import sys
 import logging
 from montagne import version
 from montagne.common.log import getLogger
@@ -49,7 +49,13 @@ def main(args=None, prog=None):
 
     # initiating application and add to application manager
     for app in app_list:
-        app_mgr.register_app(app())
+        try:
+            app_inst = app()
+        except Exception as e:
+            LOG.exception(e)
+            app_mgr.close()
+            sys.exit(0)
+        app_mgr.register_app(app_inst)
 
     app_mgr.run()
     app_mgr.run_service()

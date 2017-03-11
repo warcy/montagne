@@ -1,5 +1,6 @@
 from montagne.common.credentials import get_neutron_credentials
 from neutronclient.v2_0 import client as neutronclient
+from neutronclient.common import exceptions
 from montagne.common.neutron_constants import (AGENT_TYPE_OVS,
                                                AGENT_TYPE_LOADBALANCER)
 from montagne.common.openstack_object import OVSAgent, LBAgent, LBMember
@@ -13,6 +14,9 @@ class NeutronClient(MontagneApp):
         super(NeutronClient, self).__init__()
         self._credentials = get_neutron_credentials()
         self.neutron_client = neutronclient.Client(**self._credentials)
+        # check neutron client connection
+        self.neutron_client.list_agents()
+
         self.event_handlers = {
             oc_ev.GetNeutronClientRequest: self.reply_client
         }
@@ -25,9 +29,9 @@ class NeutronClient(MontagneApp):
         try:
             data = self.neutron_client.list_agents()
             fmt_data = unicode_fmt(data)
-        except:
-            self.LOG.exception()
-            return None
+        except exceptions.NeutronException as e:
+            self.LOG.exception(e)
+            return None, None
         agents_list = fmt_data['agents']
         ovs_agents = {}
         lb_agents = {}
@@ -46,8 +50,8 @@ class NeutronClient(MontagneApp):
         try:
             data = self.neutron_client.list_members()
             fmt_data = unicode_fmt(data)
-        except:
-            self.LOG.exception()
+        except exceptions.NeutronException as e:
+            self.LOG.exception(e)
             return None
         lb_members_list = fmt_data['members']
         lb_members = {}

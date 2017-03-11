@@ -19,6 +19,9 @@ class NovaClient(MontagneApp):
         super(NovaClient, self).__init__()
         self._credentials = get_nova_v1_1_credentials()
         self.nova_client = novaclient.Client(**self._credentials)
+        # check nova client connection
+        self.get_all_hypervisors()
+
         self.event_handlers = {
             oc_ev.GetNovaClientRequest: self.reply_client
         }

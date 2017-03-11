@@ -69,7 +69,6 @@ def _base_method(url, data=None, headers=None,
             message = response.read()
             msg_dec = message.decode(decode)
             rval = json.loads(msg_dec)
-            LOG.debug('receive')
     except hub.Timeout:
         LOG.error({'method': _caller(2),
                    'caller': _caller(3),
