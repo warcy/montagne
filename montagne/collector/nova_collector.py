@@ -1,3 +1,4 @@
+from montagne import cfg
 import time
 from montagne.common import hub
 from montagne.common.utils import unicode_fmt
@@ -7,11 +8,19 @@ from montagne.openstack_client.event import GetNovaClientRequest
 from montagne.collector import event as cl_ev
 
 
-class NovaCollector(OpenStackCollector):
-    poll_instance_interval = 60
+CONF = cfg.CONF
+CONF.register_opts([
+    cfg.IntOpt('pull_instance_interval', default=60,
+               help='pull interval of instance(seconds).')
+], 'nova_collector')
 
+
+class NovaCollector(OpenStackCollector):
     def __init__(self):
         super(NovaCollector, self).__init__()
+        self.pull_instance_interval = \
+            CONF.nova_collector.pull_instance_interval
+
         self.nova = None
         self.hypervisors = {}
         self.event_handlers = {
@@ -35,7 +44,7 @@ class NovaCollector(OpenStackCollector):
                 self.sync_hypervisor_instances()
                 self.LOG.debug("get instance in hypervisor: %s",
                                self.hypervisors.keys())
-            hub.sleep(self.poll_instance_interval - (time.time() - timestamp))
+            hub.sleep(self.pull_instance_interval - (time.time() - timestamp))
 
     def sync_hypervisors(self):
         deprecate_hostnames = set(self.hypervisors)

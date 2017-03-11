@@ -1,3 +1,4 @@
+from montagne import cfg
 import time
 from montagne.common import hub
 from montagne.collector.collector import OpenStackCollector
@@ -5,11 +6,24 @@ from montagne.openstack_client.event import GetNeutronClientRequest
 from montagne.collector import event as cl_ev
 
 
-class NeutronCollector(OpenStackCollector):
-    poll_agent_interval = 60
+CONF = cfg.CONF
+CONF.register_opts([
+    cfg.IntOpt('pull_agent_interval', default=60,
+               help='pull interval of agent(seconds).'),
+    cfg.IntOpt('pull_lb_member_interval', default=60,
+               help='pull interval of loadbalancer member(seconds).')
+], 'neutron_collector')
 
+
+class NeutronCollector(OpenStackCollector):
     def __init__(self):
         super(NeutronCollector, self).__init__()
+        self.pull_agent_interval = \
+            CONF.neutron_collector.pull_agent_interval
+        self.pull_lb_member_interval = \
+            CONF.neutron_collector.pull_lb_member_interval
+        print(self.pull_agent_interval)
+
         self.neutron = None
         self._agents = None
         self._lb_members = None
@@ -57,7 +71,7 @@ class NeutronCollector(OpenStackCollector):
                     "get neutron agents, ovs-agent:%s, lbaas-agent:%s",
                     self.ovs_agents.keys(), self.lbaas_agents.keys())
             hub.sleep(
-                self.poll_agent_interval - (time.time() - timestamp))
+                self.pull_agent_interval - (time.time() - timestamp))
 
     def _get_lb_members_loop(self):
         while True:
@@ -68,7 +82,7 @@ class NeutronCollector(OpenStackCollector):
                     "get lb members, ovs-agent:%s",
                     self.lb_members.keys())
             hub.sleep(
-                self.poll_agent_interval - (time.time() - timestamp))
+                self.pull_lb_member_interval - (time.time() - timestamp))
 
     def _get_neutron_client(self):
         while True and (not self.neutron):

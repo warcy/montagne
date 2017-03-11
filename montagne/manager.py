@@ -5,9 +5,7 @@ from montagne.common import hub
 hub.patch(thread=False)
 
 from montagne import cfg
-import os
 import sys
-import logging
 from montagne import version
 from montagne.common.log import getLogger
 from montagne.common.app_manager import ApplicationManager
@@ -22,9 +20,13 @@ from montagne.listener.openrainbow_listener import OpenRainbowListener
 from montagne.common import wsgi  # register CONF cli
 
 CONF = cfg.CONF
+CONF.register_cli_opts([
+    cfg.IntOpt('log-level', default=20,
+               help='set log level, default level INFO (with value 20).')
+])
 
 LOG = getLogger()
-LOG.setLevel(logging.INFO)
+LOG.setLevel(CONF.log_level)
 
 
 def main(args=None, prog=None):

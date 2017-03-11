@@ -5,7 +5,7 @@ from montagne.common.log import getLogger
 LOG = getLogger()
 
 CONF = cfg.CONF
-CONF.register_cli_opts([
+CONF.register_opts([
     cfg.StrOpt('auth_uri',
                default=None,
                help='Complete public Identity API endpoint'),
