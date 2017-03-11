@@ -6,6 +6,7 @@ greenlet
 # WSGI service
 Routes
 WebOb
+tinyrpc
 
 # oslo
 oslo.config==1.9.0
