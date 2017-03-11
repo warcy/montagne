@@ -1,4 +1,49 @@
 import os
+from montagne import cfg
+from montagne.common.log import getLogger
+
+LOG = getLogger()
+
+CONF = cfg.CONF
+CONF.register_cli_opts([
+    cfg.StrOpt('auth_uri',
+               default=None,
+               help='Complete public Identity API endpoint'),
+    cfg.StrOpt('identity_uri',
+               default=None,
+               help='Complete admin Identity API endpoint. This should '
+                    'specify the unversioned root endpoint '
+                    'e.g. https://localhost:35357/'),
+    cfg.StrOpt('admin_tenant_name',
+               default='admin',
+               help='Keystone service account tenant name to validate'),
+    cfg.StrOpt('admin_user',
+               help='Keystone account username'),
+    cfg.StrOpt('admin_password',
+               secret=True,
+               help='Keystone account password')
+], group='keystone_authtoken')
+
+
+def set_openstack_auth():
+    try:
+        get_neutron_credentials()
+        get_nova_v1_1_credentials()
+        get_nova_v3_credentials()
+    except:
+        os.environ['OS_USERNAME'] = CONF.keystone_authtoken.admin_user
+        os.environ['OS_PASSWORD'] = CONF.keystone_authtoken.admin_password
+        os.environ['OS_AUTH_URL'] = CONF.keystone_authtoken.auth_uri
+        os.environ['OS_TENANT_NAME'] = CONF.keystone_authtoken.admin_tenant_name
+    LOG.info('set openstack auth with '
+             'OS_AUTH_URL=%s, '
+             'OS_USERNAME=%s, '
+             'OS_PASSWORD=%s, '
+             'OS_TENANT_NAME=%s',
+             os.environ['OS_AUTH_URL'],
+             os.environ['OS_USERNAME'],
+             os.environ['OS_PASSWORD'],
+             os.environ['OS_TENANT_NAME'])
 
 
 def get_neutron_credentials():

@@ -5,11 +5,13 @@ from montagne.common import hub
 hub.patch(thread=False)
 
 from montagne import cfg
+import os
 import sys
 import logging
 from montagne import version
 from montagne.common.log import getLogger
 from montagne.common.app_manager import ApplicationManager
+from montagne.common import credentials
 from montagne.openstack_client.nova_client import NovaClient
 from montagne.openstack_client.neutron_client import NeutronClient
 from montagne.collector.neutron_collector import NeutronCollector
@@ -33,6 +35,10 @@ def main(args=None, prog=None):
     except cfg.ConfigFilesNotFoundError:
         CONF(args=args, prog=prog,
              project='montagne', version='montagne-manager %s' % version)
+
+    # read OpenStack authentication from system environment value.
+    # if failed, try to read from conf file.
+    credentials.set_openstack_auth()
 
     LOG.info('Start Montage')
     hub.patch(thread=True)
