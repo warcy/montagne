@@ -7,10 +7,10 @@ LOG = getLogger()
 CONF = cfg.CONF
 CONF.register_opts([
     cfg.StrOpt('auth_uri',
-               default=None,
+               default='http://localhost:5000/v2.0',
                help='Complete public Identity API endpoint'),
     cfg.StrOpt('identity_uri',
-               default=None,
+               default='http://localhost:35357',
                help='Complete admin Identity API endpoint. This should '
                     'specify the unversioned root endpoint '
                     'e.g. https://localhost:35357/'),
@@ -18,9 +18,11 @@ CONF.register_opts([
                default='admin',
                help='Keystone service account tenant name to validate'),
     cfg.StrOpt('admin_user',
+               default='admin',
                help='Keystone account username'),
     cfg.StrOpt('admin_password',
                secret=True,
+               default='admin',
                help='Keystone account password')
 ], group='keystone_authtoken')
 
