@@ -73,3 +73,13 @@ def get_nova_v3_credentials():
     d['auth_url'] = os.environ['OS_AUTH_URL']
     d['project_id'] = os.environ['OS_TENANT_NAME']
     return d
+
+
+def get_ceilometer_credentials():
+    d = dict()
+    d['os_username'] = os.environ['OS_USERNAME']
+    d['os_password'] = os.environ['OS_PASSWORD']
+    d['os_auth_url'] = os.environ['OS_AUTH_URL']
+    d['os_tenant_name'] = os.environ['OS_TENANT_NAME']
+    d['version'] = 2
+    return d
