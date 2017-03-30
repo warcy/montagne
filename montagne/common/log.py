@@ -1,7 +1,7 @@
 import logging
 
 
-_DEFAULT_LOG_DATE_FORMAT = "%Y-%m-%d %H:%M:%S"
+_DEFAULT_LOG_DATE_FORMAT = None
 _DEFAULT_LOG_FORMAT = "[%(asctime)s][%(levelname)s][%(name)s]%(message)s"
 
 _loggers = {}
