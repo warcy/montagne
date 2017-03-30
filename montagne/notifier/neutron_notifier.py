@@ -13,6 +13,20 @@ class NeutronNotifier(BaseNotifier):
         }
         hub.spawn(self._get_neutron_client)
 
+    def mark_invalid_lb_member(self, ev):
+        body = {
+            'member': {
+                'admin_state_up': 'False'
+            }}
+        self.update_lb_member(ev, body)
+
+    def update_lb_member(self, ev, body):
+        lb_members = ev.msg
+        self.LOG.info("update load balance pool members: %s with body %s",
+                      [v.id for k, v in lb_members.items()], body)
+        for ip, lb_member in lb_members.items():
+            hub.spawn(self.neutron.neutron_client.update_member, member=lb_member.id, body=body)
+
     def delete_lb_member(self, ev):
         lb_members = ev.msg
         self.LOG.info("remove load balance pool members: %s",
