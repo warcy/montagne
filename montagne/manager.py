@@ -9,7 +9,7 @@ import sys
 from montagne import version
 from montagne.common.log import getLogger
 from montagne.common.app_manager import ApplicationManager
-from montagne.common import credentials
+from montagne.common import credentials, log
 from montagne.openstack_client.nova_client import NovaClient
 from montagne.openstack_client.neutron_client import NeutronClient
 from montagne.collector.neutron_collector import NeutronCollector
@@ -20,13 +20,6 @@ from montagne.listener.openrainbow_listener import OpenRainbowListener
 from montagne.common import wsgi  # register CONF cli
 
 CONF = cfg.CONF
-CONF.register_cli_opts([
-    cfg.IntOpt('log-level', default=20,
-               help='set log level, default level INFO (with value 20).')
-])
-
-LOG = getLogger()
-LOG.setLevel(CONF.log_level)
 
 
 def main(args=None, prog=None):
@@ -38,6 +31,9 @@ def main(args=None, prog=None):
         CONF(args=args, prog=prog,
              project='montagne', version='montagne-manager %s' % version)
 
+    log.init_log()
+    LOG = getLogger()
+    LOG.setLevel(CONF.log_level)
     # read OpenStack authentication from system environment value.
     # if failed, try to read from conf file.
     credentials.set_openstack_auth()
