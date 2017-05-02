@@ -8,3 +8,10 @@ class EdgePhySwitchDownEvent(BaseEvent):
         super(EdgePhySwitchDownEvent, self).__init__()
         self.dst = dst_to_scheduler
         self.msg = msg
+
+
+class EdgePhySwitchPortDownEvent(BaseEvent):
+    def __init__(self, msg):
+        super(EdgePhySwitchPortDownEvent, self).__init__()
+        self.dst = dst_to_scheduler
+        self.msg = msg

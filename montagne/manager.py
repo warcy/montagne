@@ -16,7 +16,7 @@ from montagne.collector.neutron_collector import NeutronCollector
 from montagne.collector.nova_collector import NovaCollector
 from montagne.scheduler.scheduler import Scheduler
 from montagne.notifier.neutron_notifier import NeutronNotifier
-from montagne.listener.openrainbow_listener import OpenRainbowListener
+from montagne.listener.openrainbow_listener import PhysicalNetworkListener
 from montagne.common import wsgi  # register CONF cli
 
 CONF = cfg.CONF
@@ -48,7 +48,7 @@ def main(args=None, prog=None):
         NeutronCollector, NovaCollector,
         Scheduler,
         NeutronNotifier,
-        OpenRainbowListener
+        PhysicalNetworkListener
     ]
 
     # initiating application and add to application manager
