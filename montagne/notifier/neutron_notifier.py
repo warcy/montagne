@@ -9,7 +9,7 @@ class NeutronNotifier(BaseNotifier):
         super(NeutronNotifier, self).__init__()
         self.neutron = None
         self.event_handlers = {
-            nt_ev.DeleteLBMemberEvent: self.delete_lb_member
+            nt_ev.DeleteLBMemberEvent: self.mark_invalid_lb_member
         }
         hub.spawn(self._get_neutron_client)
 
