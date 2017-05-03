@@ -16,3 +16,26 @@ and so on, to configure your OpenStack LBaaS module.
 sudo apt-get install python3-dev
 python3 tools/install_venv.py
 ```
+
+## Example
+
+edge switch fault
+
+```bash
+$ curl 127.0.0.1:8080/event/switch -X POST -i -d '{
+    "tunnel_ip": ["10.0.0.31", "10.0.0.32"],
+    "dpid": "0000001e080003ac",
+    "status": "False"
+}'
+```
+
+edge switch port fault
+
+```bash
+$ curl 127.0.0.1:8080/event/switch/port -X POST -i -d '{
+    "tunnel_ip": ["10.0.0.31", "10.0.0.32"],
+    "dpid": "0000001e080003ac",
+    "port_no": "1",
+    "status": "False"
+}'
+```

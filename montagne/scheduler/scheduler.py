@@ -20,31 +20,32 @@ class Scheduler(MontagneApp):
 
     def edge_phy_switch_down(self, ev):
         msg = ev.msg
-        tunnel_ip = msg.get('tunnel_ip')
+        tunnel_ip_list = msg.get('tunnel_ip')
         dpid = msg.get('dpid')
         status = msg.get('status')
         self.LOG.debug("switch %s down, affected tunnel_ip: %s",
-                       dpid, tunnel_ip)
+                       dpid, tunnel_ip_list)
 
-        # get affected tunnel agent by tunnel ip
-        ovs_agent = self.send_request(GetOVSAgentRequest(tunnel_ip)).msg
-        if not ovs_agent:
-            self.LOG.warning("ovs agent not found(tunnel_ip=%s)", tunnel_ip)
-            return
+        for tunnel_ip in tunnel_ip_list:
+            # get affected tunnel agent by tunnel ip
+            ovs_agent = self.send_request(GetOVSAgentRequest(tunnel_ip)).msg
+            if not ovs_agent:
+                self.LOG.warning("ovs agent not found(tunnel_ip=%s)", tunnel_ip)
+                return
 
-        # get hypervisor/phy server by agent.hostname
-        host = ovs_agent.host
-        hypervisor = self.send_request(GetHypervisorRequest(host)).msg
-        if not hypervisor:
-            self.LOG.warning("hypervisor not found(hypervisor=%s)", host)
-            return
-        self.LOG.debug("hypervisor [%s] with instances: %s",
-                       host, hypervisor.servers.keys())
+            # get hypervisor/phy server by agent.hostname
+            host = ovs_agent.host
+            hypervisor = self.send_request(GetHypervisorRequest(host)).msg
+            if not hypervisor:
+                self.LOG.warning("hypervisor not found(hypervisor=%s)", host)
+                return
+            self.LOG.debug("hypervisor [%s] with instances: %s",
+                           host, hypervisor.servers.keys())
 
-        # TODO: call novaclient methods directly to find specific
-        #       servers/instances, will be a bottleneck.
-        for server_uuid in hypervisor.servers:
-            hub.spawn(self._thread_edge_phy_switch_down, server_uuid)
+            # TODO: call novaclient methods directly to find specific
+            #       servers/instances, will be a bottleneck.
+            for server_uuid in hypervisor.servers:
+                hub.spawn(self._thread_edge_phy_switch_down, server_uuid)
 
     def _thread_edge_phy_switch_down(self, server_uuid):
         # get specific server/instance information.
@@ -78,32 +79,33 @@ class Scheduler(MontagneApp):
 
     def edge_phy_switch_port_down(self, ev):
         msg = ev.msg
-        tunnel_ip = msg.get('tunnel_ip')
+        tunnel_ip_list = msg.get('tunnel_ip')
         dpid = msg.get('dpid')
         port_no = msg.get('port_no')
         status = msg.get('status')
         self.LOG.debug("switch %s port %s down, affected tunnel_ip: %s",
-                       dpid, port_no, tunnel_ip)
+                       dpid, port_no, tunnel_ip_list)
 
-        # get affected tunnel agent by tunnel ip
-        ovs_agent = self.send_request(GetOVSAgentRequest(tunnel_ip)).msg
-        if not ovs_agent:
-            self.LOG.warning("ovs agent not found(tunnel_ip=%s)", tunnel_ip)
-            return
+        for tunnel_ip in tunnel_ip_list:
+            # get affected tunnel agent by tunnel ip
+            ovs_agent = self.send_request(GetOVSAgentRequest(tunnel_ip)).msg
+            if not ovs_agent:
+                self.LOG.warning("ovs agent not found(tunnel_ip=%s)", tunnel_ip)
+                return
 
-        # get hypervisor/phy server by agent.hostname
-        host = ovs_agent.host
-        hypervisor = self.send_request(GetHypervisorRequest(host)).msg
-        if not hypervisor:
-            self.LOG.warning("hypervisor not found(hypervisor=%s)", host)
-            return
-        self.LOG.debug("hypervisor [%s] with instances: %s",
-                       host, hypervisor.servers.keys())
+            # get hypervisor/phy server by agent.hostname
+            host = ovs_agent.host
+            hypervisor = self.send_request(GetHypervisorRequest(host)).msg
+            if not hypervisor:
+                self.LOG.warning("hypervisor not found(hypervisor=%s)", host)
+                return
+            self.LOG.debug("hypervisor [%s] with instances: %s",
+                           host, hypervisor.servers.keys())
 
-        # TODO: call novaclient methods directly to find specific
-        #       servers/instances, will be a bottleneck.
-        for server_uuid in hypervisor.servers:
-            hub.spawn(self._thread_edge_phy_switch_down, server_uuid)
+            # TODO: call novaclient methods directly to find specific
+            #       servers/instances, will be a bottleneck.
+            for server_uuid in hypervisor.servers:
+                hub.spawn(self._thread_edge_phy_switch_down, server_uuid)
 
     def _get_neutron_client(self):
         while True and (not self.neutron):
