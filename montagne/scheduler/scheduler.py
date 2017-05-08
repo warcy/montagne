@@ -31,14 +31,14 @@ class Scheduler(MontagneApp):
             ovs_agent = self.send_request(GetOVSAgentRequest(tunnel_ip)).msg
             if not ovs_agent:
                 self.LOG.warning("ovs agent not found(tunnel_ip=%s)", tunnel_ip)
-                return
+                continue
 
             # get hypervisor/phy server by agent.hostname
             host = ovs_agent.host
             hypervisor = self.send_request(GetHypervisorRequest(host)).msg
             if not hypervisor:
                 self.LOG.warning("hypervisor not found(hypervisor=%s)", host)
-                return
+                continue
             self.LOG.debug("hypervisor [%s] with instances: %s",
                            host, hypervisor.servers.keys())
 
@@ -91,14 +91,14 @@ class Scheduler(MontagneApp):
             ovs_agent = self.send_request(GetOVSAgentRequest(tunnel_ip)).msg
             if not ovs_agent:
                 self.LOG.warning("ovs agent not found(tunnel_ip=%s)", tunnel_ip)
-                return
+                continue
 
             # get hypervisor/phy server by agent.hostname
             host = ovs_agent.host
             hypervisor = self.send_request(GetHypervisorRequest(host)).msg
             if not hypervisor:
                 self.LOG.warning("hypervisor not found(hypervisor=%s)", host)
-                return
+                continue
             self.LOG.debug("hypervisor [%s] with instances: %s",
                            host, hypervisor.servers.keys())
 
